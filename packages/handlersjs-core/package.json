@@ -21,7 +21,8 @@
     "build:components": "componentsjs-generator --typeScopedContexts -s lib -c dist/components -i .componentsignore",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
-    "lint:staged": "lint-staged"
+    "lint:staged": "lint-staged",
+    "docs": "typedoc"
   },
   "repository": {
     "type": "git",
@@ -42,6 +43,7 @@
     "lint-staged": "^10.5.4",
     "rimraf": "^2.7.1",
     "ts-node": "^9.1.1",
+    "typedoc": "^0.21.4",
     "typescript": "3.8.3"
   },
   "dependencies": {
@@ -58,6 +60,7 @@
     "https://linkedsoftwaredependencies.org/bundles/npm/@digita-ai/handlersjs-core/^0.0.0/config/": "config/",
     "https://linkedsoftwaredependencies.org/bundles/npm/@digita-ai/handlersjs-core/^0.0.0/dist/": "dist/"
   },
+  "eslintIgnore": [ "docs" ],
   "jest": {
     "preset": "@digita-ai/jest-config",
     "displayName": "core",
