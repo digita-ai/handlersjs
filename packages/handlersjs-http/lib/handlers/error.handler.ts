@@ -5,6 +5,9 @@ import { HttpHandlerResponse } from '../models/http-handler-response';
 import { HttpHandler } from '../models/http-handler';
 import { HttpHandlerContext } from '../models/http-handler-context';
 
+/**
+ * HTTP error status codes and their respective messages.
+ */
 export const statusCodes: { [code: number]: string } = {
   400: 'Bad Request',
   401: 'Unauthorized',
@@ -48,14 +51,18 @@ export const statusCodes: { [code: number]: string } = {
   511: 'Network Authentication Required',
 };
 
+/**
+ * A { Handler<HttpHandlerContext, HttpHandlerResponse> } that catches errors and returns an error response to the given handler.
+ */
 export class ErrorHandler implements HttpHandler {
 
   private logger = getLoggerFor(this, 5, 5);
 
   /**
-   * Creates an {ErrorHandler} that catches errors and returns an error response to the given handler.
+   * Creates an {ErrorHandler}.
    *
-   * @param {boolean} showUpstreamError - flag to show upstream errors or not
+   * @param { HttpHandler } nestedHandler - The handler to catch errors for.
+   * @param { boolean } showUpstreamError - Flag to show upstream errors or not.
    */
   constructor(
     private nestedHandler: HttpHandler,
@@ -70,6 +77,11 @@ export class ErrorHandler implements HttpHandler {
 
   }
 
+  /**
+   * Handles the context by catching thrown errors and returning an appropriate error response.
+   *
+   * @param { HttpHandlerContext } context - The context of the request.
+   */
   handle(context: HttpHandlerContext): Observable<HttpHandlerResponse>{
 
     if (!context) {

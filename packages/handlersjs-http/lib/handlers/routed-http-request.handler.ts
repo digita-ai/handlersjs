@@ -8,9 +8,7 @@ import { HttpHandlerResponse } from '../models/http-handler-response';
 import { HttpHandlerRoute } from '../models/http-handler-route';
 
 /**
- * A {HttpHandler} handling requests based on routes in a given list of {HttpHandlerController}s.
- *
- * @class
+ * A { HttpHandler } handling requests based on routes in a given list of { HttpHandlerController }s.
  */
 export class RoutedHttpRequestHandler implements HttpHandler {
 
@@ -21,7 +19,7 @@ export class RoutedHttpRequestHandler implements HttpHandler {
   /**
    * Creates a RoutedHttpRequestHandler, super calls the HttpHandler class and expects a list of HttpHandlerControllers
    *
-   * @param {HttpHandlerController[]} handlerControllerList - a list of HttpHandlerController objects
+   * @param { HttpHandlerController[] } handlerControllerList - a list of HttpHandlerController objects.
    */
   constructor(private handlerControllerList: HttpHandlerController[], private defaultHandler?: HttpHandler) {
 

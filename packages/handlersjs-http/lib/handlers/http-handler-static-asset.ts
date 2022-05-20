@@ -10,12 +10,24 @@ import { NotFoundHttpError } from '../errors/not-found-http-error';
 import { UnsupportedMediaTypeHttpError } from '../errors/unsupported-media-type-http-error';
 import { ForbiddenHttpError } from '../errors/forbidden-http-error';
 
+/**
+ * A { HttpHandler } that serves static assets
+ * by reading a file and returning the contents in a { HttpHandlerResponse } object.
+ */
 export class HttpHandlerStaticAssetService implements HttpHandler {
 
   private logger = getLoggerFor(this, 5, 5);
 
   constructor(private path: string, private contentType: string) { }
 
+  /**
+   * Checks if an accept header is present.
+   * Checks if the content type is supported.
+   * Reads the file and returns the content in a response if the file was found.
+   *
+   * @param { HttpHandlerContext } context - The context to handle.
+   * @returns A response containing the file contents and the appropriate content type header.
+   */
   handle(context: HttpHandlerContext): Observable<HttpHandlerResponse> {
 
     const possibleAcceptHeaders = [ this.contentType, `${this.contentType.split('/')[0]}/*`, '*/*' ];

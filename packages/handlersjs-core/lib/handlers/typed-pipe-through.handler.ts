@@ -1,4 +1,4 @@
-import { Observable, of, throwError } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { HandlerArgumentError } from '../errors/handler-argument-error';
 import { Handler } from './handler';
@@ -8,8 +8,16 @@ type HandlerSequence2<A, B, C> = [ Handler<A, B>, Handler<B, C> ];
 type HandlerSequence3<A, B, C, D> = [ Handler<A, B>, Handler<B, C>, Handler<C, D> ];
 type HandlerSequence4<A, B, C, D, E> = [ Handler<A, B>, Handler<B, C>, Handler<C, D>, Handler<D, E> ];
 
+/**
+ * A { Handler<A, E> } that pipes the input, including the correct typing, through a HandlerSequence.
+ */
 export class TypedPipeThroughHandler<A, B, C, D, E> implements Handler<A, E> {
 
+  /**
+   * Creates a { TypedPipeThroughHandler<A, B, C, D, E> }.
+   *
+   * @param { HandlerSequence1<A, E> | HandlerSequence2<A, B, E> | HandlerSequence3<A, B, C, E> | HandlerSequence4<A, B, C, D, E> } handlers - The series of handlers to pipe the input through.
+   */
   constructor(
     public handlers: HandlerSequence1<A, E> |
     HandlerSequence2<A, B, E> |
@@ -21,6 +29,9 @@ export class TypedPipeThroughHandler<A, B, C, D, E> implements Handler<A, E> {
 
   }
 
+  /**
+   * Pipes the typed input from one handler to the next calling the handle method on each handler in the sequence of handlers.
+   */
   handle(input: A): Observable<E> {
 
     switch (this.handlers.length) {

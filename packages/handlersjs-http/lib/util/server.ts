@@ -1,13 +1,13 @@
 import { Daemon } from '@digita-ai/handlersjs-core';
 
 /**
- * A {Daemon} process listening on a given `scheme``://``host``:``port` location
+ * A { Daemon } process listening on a given `scheme``://``host``:``port` location
  *
  */
 export abstract class Server extends Daemon {
 
   /**
-   * Creates a new {Server} that will listen on specified `scheme``://``host``:``port`.
+   * Creates a new { Server } that will listen on specified `scheme``://``host``:``port`.
    *
    * @param {string} scheme - the url scheme of the location on which the server will listen
    * @param {string} host - the host name of the location on which the server will listen

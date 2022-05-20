@@ -6,12 +6,14 @@ import { Observable } from 'rxjs';
 export abstract class Daemon {
 
   /**
-   * Start the server
+   * @override
+   * @inheritdoc Handlers.Daemon#start
    */
   abstract start(): Observable<Daemon>;
 
   /**
-   * Stop the server
+   * @override
+   * @inheritdoc Handlers.Daemon#stop
    */
   abstract stop(): Observable<Daemon>;
 

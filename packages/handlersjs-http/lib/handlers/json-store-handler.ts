@@ -6,15 +6,18 @@ import { HttpHandler } from '../models/http-handler';
 import { HttpHandlerContext } from '../models/http-handler-context';
 import { HttpHandlerResponse } from '../models/http-handler-response';
 
+/**
+ * A handler that returns the contents of the storage data as a stringified JSON response
+ */
 export class JsonStoreHandler<T extends string, M extends { [t in T]: unknown }> implements HttpHandler {
 
   private logger = getLoggerFor(this, 5, 5);
 
   /**
-   * Creates a HTTP handler that returns the contents of the storage data as a stringified JSON response
+   * Creates a { JSONStoreHandler }.
    *
-   * @param data the key for accessing the data in a given store
-   * @param store the store that contains the data
+   * @param { T } data - The key for accessing the data in a given store
+   * @param { TimedTypedKeyValueStore } store the store that contains the data
    */
   constructor(
     private readonly data: T,
@@ -22,7 +25,7 @@ export class JsonStoreHandler<T extends string, M extends { [t in T]: unknown }>
   ) { }
 
   /**
-   * Attempts to fetch the data from the storage
+   * Attempts to fetch the data from the storage.
    *
    * @returns the stringified storage data as a HTTP response, or a Not Found HTTP response
    */
@@ -47,10 +50,11 @@ export class JsonStoreHandler<T extends string, M extends { [t in T]: unknown }>
   }
 
   /**
-   * Handles an incoming http request to fetch the storage data
+   * Handles an incoming http request to fetch the storage data.
+   * If a if-modified-since header is present checks the store for updates and returns the data as a JSON response if updated.
+   * If not replies with a Not Modified HTTP response.
    *
-   * @param context
-   * @returns an HTTP response
+   * @param { HttpHandlerContext } context - The context containing the request to handle.
    */
   handle(context: HttpHandlerContext): Observable<HttpHandlerResponse> {
 

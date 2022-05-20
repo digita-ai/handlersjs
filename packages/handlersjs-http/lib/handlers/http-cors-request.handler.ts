@@ -14,16 +14,33 @@ export interface HttpCorsOptions {
   credentials?: boolean;
   maxAge?: number;
 }
+
+/**
+ * A { HttpHandler } that handles CORS requests.
+ */
 export class HttpCorsRequestHandler implements HttpHandler {
 
   private logger = getLoggerFor(this, 5, 5);
 
+  /**
+   * Creates a { HttpCorsRequestHandler }.
+   *
+   * @param { HttpHandler } handler - The nested handler to pass the request to.
+   * @param { HttpCorsOptions } options? - The CORS options.
+   * @param { boolean } passThroughOptions - Flag to indicate to include request options or not.
+   */
   constructor(
     private handler: HttpHandler,
     private options?: HttpCorsOptions,
     private passThroughOptions: boolean = false,
   ) { }
 
+  /**
+   * Cleans the headers on the request and checks if it's a preflight request or not and handles it accordingly.
+   * Adds the appropriate CORS headers to the response.
+   *
+   * @param { HttpHandlerContext } context - The context containing the request.
+   */
   handle(context: HttpHandlerContext): Observable<HttpHandlerResponse> {
 
     const { origins, allowMethods, allowHeaders, exposeHeaders, credentials, maxAge } = this.options || ({});

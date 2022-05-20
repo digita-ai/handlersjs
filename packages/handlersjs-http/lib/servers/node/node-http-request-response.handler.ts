@@ -31,6 +31,13 @@ export class NodeHttpRequestResponseHandler implements NodeHttpStreamsHandler {
 
   }
 
+  /**
+   * Parses the body of the request into a string or object according to the provided content-type.
+   *
+   * @param { string } body - The body to parse.
+   * @param { string } contentType - The content-type of the body.
+   * @returns A string containing the body or a JSON object containing the parsed body.
+   */
   private parseBody(body: string, contentType?: string): string | { [key: string]: string } {
 
     // TODO: parse x-www-form-urlencoded body

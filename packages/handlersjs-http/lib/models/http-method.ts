@@ -1,4 +1,6 @@
-
+/**
+ * Enum for all possible HTTP methods.
+ */
 export enum HttpMethods {
   CONNECT   = 'CONNECT',
   DELETE    = 'DELETE',

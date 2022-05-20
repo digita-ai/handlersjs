@@ -2,15 +2,18 @@ import { Observable, of, throwError } from 'rxjs';
 import { Handler } from '../handlers/handler';
 import { Daemon } from '../models/daemon';
 
+/**
+ * Daemon that, when started, repeats a certain task on interval.
+ */
 export class Scheduler extends Daemon {
 
   private currentTimeout: NodeJS.Timeout | undefined;
 
   /**
-   * A scheduler is a daemon that, when started, executes a given task on-repeat
+   * Creates a { Scheduler }.
    *
-   * @param interval the interval inbetween tasks
-   * @param task the task to execute
+   * @param { number } interval - The interval in between tasks.
+   * @param { Handler<void, void> } task - The task to execute every interval.
    */
   constructor(
     private readonly interval: number,
