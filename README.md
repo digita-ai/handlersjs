@@ -1,24 +1,88 @@
 # Handlersjs
-## Configure Git
 
-Start by installing Git and configuring your global Git name and email address. You can do so by executing the following commands. Please make sure to use exactly the same name and email address as in your Github profile.
+![GitHub package.json version](https://img.shields.io/github/package-json/v/digita-ai/handlersjs)  	  ![Build Status](https://github.com/digita-ai/handlerjs/workflows/CI/badge.svg)
+
+## What is Handlersjs
+
+The goal of this project for us is to create an alternative for the big web frameworks like [Express](https://expressjs.com/) and [Koa](https://koajs.com/) to give ourselves more control over classes and how we use / instatiate them.
+Handlersjs is a collection of classes and interfaces which are to be configured and or extended by the user.
+
+## Packages inside this repo
+ - [@digita-ai/handlersjs-core](https://github.com/digita-ai/handlersjs/tree/develop/packages/handlersjs-core)
+ - [@digita-ai/handlersjs-http](https://github.com/digita-ai/handlersjs/tree/develop/packages/handlersjs-http)
+ - [@digita-ai/handlersjs-logging](https://github.com/digita-ai/handlersjs/tree/develop/packages/handlersjs-logging)
+ - [@digita-ai/handlersjs-storage](https://github.com/digita-ai/handlersjs/tree/develop/packages/handlersjs-storage)
+
+
+## Lincense [MIT](https://github.com/digita-ai/handlersjs/blob/develop/LICENSE.md)
+## How to use Handlersjs
+
+#### In order to pull packages from GitHub, you need to [authenticate by using a personal access token](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-npm-registry).
+
+Add this line to your .npmrc file:
+```
+@digita-ai:registry=https://npm.pkg.github.com/
+```
+
+add the desired packages to your dependencies:
+```
+> npm i @digita-ai/handlersjs-core
+```
+
+### Barebones example configuration ( represented by [Components.js DI](https://componentsjs.readthedocs.io/en/latest/) configuration )
 
 ```
-$ git config --global user.name "John Doe"
-$ git config --global user.email john@digita.ai
-```
-
-To be safe, backup all of your existing repositories, or simply create a new folder which will contain your Github repositories. Once done, clone the Github repositories by executing the following command.
-
-```
-$ git clone git@github.com:digita-ai/handlersjs.git
-```
-
-In order to pull and publish packages from GitHub, you need to [authenticate by using a personal access token](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-npm-registry). Start by generating one which has at least the `write:packages` and `read:packages` scopes on [this page](https://github.com/settings/tokens). Note that you will not be able to recover or view the token after it has been created, so keep it somewhere safe.
-
-```
-$ npm login --registry#https://npm.pkg.github.com
-Username: [your GitHub username]
-Password: [your personal access token]
-Email: [your GitHub e-mail address]
+[
+  {
+    "@id": "urn:api-app:variables:apiHost",
+    "@type": "Variable"
+  },
+  {
+    "@id": "urn:api-app:variables:apiPort",
+    "@type": "Variable"
+  },
+  {
+	"@type": "NodeHttpServer",
+	"port": { "@id": "urn:api-app:variables:apiPort" },
+	"host": { "@id": "urn:api-app:variables:apiHost" },
+	"nodeHttpStreamsHandler": {
+	  "@type": "NodeHttpRequestResponseHandler",
+	  "httpHandler": {
+		"@type": "HttpCorsRequestHandler",
+		"handler": {
+		  "@type": "ErrorHandler",
+		  "showUpstreamError": true,
+		  "nestedHandler": {
+			"@type": "RoutedHttpRequestHandler",
+			"handlerControllerList": [
+			  {
+				"@type": "HttpHandlerController",
+				"label": "IndexController",
+				"routes": [
+				  { "@id": "urn:api-app:default:routes:Index" }
+				]
+			  }
+			]
+		  }
+		}
+	  }
+	}
+  },
+  {
+	"@id": "urn:api-app:default:routes:Index",
+	"@type": "HttpHandlerRoute",
+	"operations": [
+	  {
+		"@type": "HttpHandlerOperation",
+		"method": "GET"
+	  }
+	],
+	"handler": {
+	  "@type": "HttpHandlerStaticAssetService",
+	  "path": "./assets/index.html",
+	  "contentType": "text/html"
+	},
+	"path": "/index"
+  }
+]
 ```
