@@ -5,7 +5,7 @@ import { TypedKeyValueStore } from './models/typed-key-value-store';
  *
  * @inheritdoc
  */
-export class LocalStorageStore<M> implements TypedKeyValueStore<M> {
+export class LocalStorageStore<M extends { [key: string]: unknown }> implements TypedKeyValueStore<M> {
 
   constructor() {
 
@@ -13,7 +13,7 @@ export class LocalStorageStore<M> implements TypedKeyValueStore<M> {
 
   }
 
-  async get<T extends keyof M>(key: T): Promise<M[T] | undefined> {
+  async get<T extends string>(key: T): Promise<M[T] | undefined> {
 
     const localStorageStoreString = localStorage.getItem('localStorageStore');
 
@@ -23,7 +23,7 @@ export class LocalStorageStore<M> implements TypedKeyValueStore<M> {
 
   }
 
-  async has<T extends keyof M>(key: T): Promise<boolean> {
+  async has<T extends string>(key: T): Promise<boolean> {
 
     const localStorageStoreString = localStorage.getItem('localStorageStore');
 
@@ -33,7 +33,7 @@ export class LocalStorageStore<M> implements TypedKeyValueStore<M> {
 
   }
 
-  async set<T extends keyof M>(key: T, value: M[T]): Promise<this> {
+  async set<T extends string>(key: T, value: M[T]): Promise<this> {
 
     const localStorageStoreString = localStorage.getItem('localStorageStore');
 
@@ -47,7 +47,7 @@ export class LocalStorageStore<M> implements TypedKeyValueStore<M> {
 
   }
 
-  async delete<T extends keyof M>(key: T): Promise<boolean> {
+  async delete<T extends string>(key: T): Promise<boolean> {
 
     const localStorageStoreString = localStorage.getItem('localStorageStore');
 
@@ -62,7 +62,7 @@ export class LocalStorageStore<M> implements TypedKeyValueStore<M> {
   }
 
   // eslint-disable-next-line require-yield
-  async* entries(): AsyncIterableIterator<[keyof M, M[keyof M]]> {
+  async* entries(): AsyncIterableIterator<[string, M[string]]> {
 
     throw new Error('Not Implemented');
 

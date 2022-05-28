@@ -9,6 +9,7 @@ describe('MemoryStore', () => {
     key3: boolean;
     key4: string[];
     key5: Set<string>;
+    [key: string]: unknown;
   }
 
   let store: MemoryStore<TestInterface>;
@@ -21,7 +22,7 @@ describe('MemoryStore', () => {
 
   it('can be initialized with values', async () => {
 
-    const initialData: [keyof TestInterface, TestInterface[keyof TestInterface]][] = [
+    const initialData: [string, TestInterface[keyof TestInterface]][] = [
       [ 'key1', 4 ],
       [ 'key2', '123' ],
       [ 'key4', [ '', '', '321' ] ],
@@ -201,13 +202,13 @@ describe('MemoryStore', () => {
 
     it('should iterate over added key-value pairs', async () => {
 
-      const allValues: [keyof TestInterface, TestInterface[keyof TestInterface]][] = [
+      const allValues: [string, TestInterface[keyof TestInterface]][] = [
         [ 'key1', 4 ],
         [ 'key2', '123' ],
         [ 'key4', [ '', '', '321' ] ],
       ];
 
-      const allValuesMap: Map<keyof TestInterface, TestInterface[keyof TestInterface]> = new Map(allValues);
+      const allValuesMap: Map<string, TestInterface[keyof TestInterface]> = new Map(allValues);
 
       allValuesMap.forEach((value, key) => store.set(key, value));
 

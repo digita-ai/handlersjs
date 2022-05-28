@@ -39,7 +39,7 @@ export class JsonFileStore<M extends Record<string, any>> implements TypedKeyVal
 
   }
 
-  async get<T extends keyof M>(key: T): Promise<M[T] | undefined> {
+  async get<T extends string>(key: T): Promise<M[T] | undefined> {
 
     const json = await this.getJson();
 
@@ -47,7 +47,7 @@ export class JsonFileStore<M extends Record<string, any>> implements TypedKeyVal
 
   }
 
-  async has<T extends keyof M>(key: T): Promise<boolean> {
+  async has<T extends string>(key: T): Promise<boolean> {
 
     const json = await this.getJson();
 
@@ -55,7 +55,7 @@ export class JsonFileStore<M extends Record<string, any>> implements TypedKeyVal
 
   }
 
-  async set<T extends keyof M>(key: T, value: M[T]): Promise<this> {
+  async set<T extends string>(key: T, value: M[T]): Promise<this> {
 
     return await this.updateJson((json: M): this => {
 
@@ -67,7 +67,7 @@ export class JsonFileStore<M extends Record<string, any>> implements TypedKeyVal
 
   }
 
-  async delete<T extends keyof M>(key: T): Promise<boolean> {
+  async delete<T extends string>(key: T): Promise<boolean> {
 
     return await this.updateJson((json: M): boolean => {
 
@@ -86,7 +86,7 @@ export class JsonFileStore<M extends Record<string, any>> implements TypedKeyVal
 
   }
 
-  async* entries(): AsyncIterableIterator<[keyof M, M[keyof M]]> {
+  async* entries(): AsyncIterableIterator<[string, M[string]]> {
 
     const json = await this.getJson();
 

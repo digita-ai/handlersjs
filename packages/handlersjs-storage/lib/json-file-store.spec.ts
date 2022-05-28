@@ -11,6 +11,7 @@ describe('JsonFileStore', () => {
     key3: boolean;
     key4: string[];
     key5: Record<string, string>;
+    [key: string]: unknown;
   }
 
   const path = join(__dirname, '../../test/store.json');
@@ -157,13 +158,13 @@ describe('JsonFileStore', () => {
 
     it('should iterate over added key-value pairs', async () => {
 
-      const allValues: [keyof TestInterface, TestInterface[keyof TestInterface]][] = [
+      const allValues: [string, TestInterface[keyof TestInterface]][] = [
         [ 'key1', 4 ],
         [ 'key2', '123' ],
         [ 'key4', [ '', '', '321' ] ],
       ];
 
-      const allValuesMap: Map<keyof TestInterface, TestInterface[keyof TestInterface]> = new Map(allValues);
+      const allValuesMap: Map<string, TestInterface[keyof TestInterface]> = new Map(allValues);
 
       for await (const [ key, value ] of allValuesMap.entries()) { await store.set(key, value); }
 

@@ -4,4 +4,5 @@ import { TypedKeyValueStore } from './typed-key-value-store';
 /**
  * Combines the methods of the TypedKeyValueStore and TimedKeyValueStore
  */
-export type TimedTypedKeyValueStore<M> = TypedKeyValueStore<M> & TimedKeyValueStore<keyof M, M[keyof M]>;
+export type TimedTypedKeyValueStore<M extends { [key: string]: unknown }>
+  = TypedKeyValueStore<M> & TimedKeyValueStore<string, M[string]>;

@@ -1,6 +1,6 @@
 import { KeyValueStore } from './key-value-store';
 
-export interface TypedKeyValueStore<M> extends KeyValueStore<keyof M, M[keyof M]> {
+export interface TypedKeyValueStore<M extends { [key: string]: unknown }> extends KeyValueStore<string, M[string]> {
 
   /**
    * Returns the value stored for the given identifier.
@@ -10,7 +10,7 @@ export interface TypedKeyValueStore<M> extends KeyValueStore<keyof M, M[keyof M]
    *
    * @returns the value identified by the given key
    */
-  get: <T extends keyof M>(key: T) => Promise<M[T] | undefined>;
+  get: <T extends string>(key: T) => Promise<M[T] | undefined>;
 
   /**
    * Checks if there is a value stored for the given key.
@@ -19,7 +19,7 @@ export interface TypedKeyValueStore<M> extends KeyValueStore<keyof M, M[keyof M]
    *
    * @returns whether the key is in the store
    */
-  has: <T extends keyof M>(key: T) => Promise<boolean>;
+  has: <T extends string>(key: T) => Promise<boolean>;
 
   /**
    * Sets the value for the given key.
@@ -29,7 +29,7 @@ export interface TypedKeyValueStore<M> extends KeyValueStore<keyof M, M[keyof M]
    *
    * @returns The storage.
    */
-  set: <T extends keyof M>(key: T, value: M[T]) => Promise<this>;
+  set: <T extends string>(key: T, value: M[T]) => Promise<this>;
 
   /**
    * Deletes the value stored for the given key.
@@ -38,13 +38,13 @@ export interface TypedKeyValueStore<M> extends KeyValueStore<keyof M, M[keyof M]
    *
    * @returns If there was a value to delete.
    */
-  delete: <T extends keyof M>(key: T) => Promise<boolean>;
+  delete: <T extends string>(key: T) => Promise<boolean>;
 
   /**
    * An iterable of entries in the storage.
    *
    * @returns the asynchronous iterator
    */
-  entries: () => AsyncIterableIterator<[keyof M, M[keyof M]]>;
+  entries: () => AsyncIterableIterator<[string, M[string]]>;
 
 }

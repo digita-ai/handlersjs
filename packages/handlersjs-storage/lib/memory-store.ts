@@ -31,33 +31,33 @@ import { TimedTypedKeyValueStore } from './models/timed-typed-key-value-store';
  *
  * @inheritdoc
  */
-export class MemoryStore<M> implements TimedTypedKeyValueStore<M> {
+export class MemoryStore<M extends { [key: string]: unknown }> implements TimedTypedKeyValueStore<M> {
 
-  private readonly data: Map<keyof M, TimedValue<M[keyof M]>>;
+  private readonly data: Map<string, TimedValue<M[string]>>;
 
   /**
    *
    * @param initialData data to initialize the memorystore with @range {json}
    */
-  constructor(initialData?: [keyof M, M[keyof M]][]) {
+  constructor(initialData?: [string, M[string]][]) {
 
     this.data = new Map(initialData?.map(([ key, value ]) => [ key, { value: clone(value), timestamp: Date.now() } ]));
 
   }
 
-  async get<T extends keyof M>(key: T): Promise<M[T] | undefined> {
+  async get<T extends string>(key: T): Promise<M[T] | undefined> {
 
     return this.data.has(key) ? clone(this.data.get(key)?.value as M[T]) : undefined;
 
   }
 
-  async has<T extends keyof M>(key: T): Promise<boolean> {
+  async has<T extends string>(key: T): Promise<boolean> {
 
     return this.data.has(key);
 
   }
 
-  async set<T extends keyof M>(key: T, value: M[T]): Promise<this> {
+  async set<T extends string>(key: T, value: M[T]): Promise<this> {
 
     this.data.set(key, { value: clone(value), timestamp: Date.now() });
 
@@ -65,13 +65,13 @@ export class MemoryStore<M> implements TimedTypedKeyValueStore<M> {
 
   }
 
-  async delete<T extends keyof M>(key: T): Promise<boolean> {
+  async delete<T extends string>(key: T): Promise<boolean> {
 
     return this.data.delete(key);
 
   }
 
-  async* entries(): AsyncIterableIterator<[keyof M, M[keyof M]]> {
+  async* entries(): AsyncIterableIterator<[string, M[string]]> {
 
     for (const [ key, value ] of this.data.entries()) {
 
@@ -81,13 +81,13 @@ export class MemoryStore<M> implements TimedTypedKeyValueStore<M> {
 
   }
 
-  async latestUpdate<T extends keyof M>(key: T): Promise<number | undefined> {
+  async latestUpdate<T extends string>(key: T): Promise<number | undefined> {
 
     return this.data.get(key)?.timestamp;
 
   }
 
-  async hasUpdate <T extends keyof M>(key: T, time: number): Promise<boolean | undefined> {
+  async hasUpdate <T extends string>(key: T, time: number): Promise<boolean | undefined> {
 
     const timedValue = this.data.get(key);
 
