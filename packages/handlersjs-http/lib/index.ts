@@ -16,7 +16,6 @@ export * from './handlers/routed-http-request.handler';
 export * from './handlers/json-store-handler';
 export * from './handlers/error.handler';
 export * from './handlers/status-handler';
-export * from './handlers/http-sequence-handler';
 export * from './models/http-handler-context';
 export * from './models/http-handler-controller';
 export * from './models/http-handler-request';
