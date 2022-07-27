@@ -1,10 +1,12 @@
 import { getLoggerFor } from '@digita-ai/handlersjs-logging';
 import { Observable, of, Subject, throwError } from 'rxjs';
 import { map, switchMap, toArray, catchError } from 'rxjs/operators';
+import { BadRequestHttpError } from '../../errors/bad-request-http-error';
 import { HttpHandler } from '../../models/http-handler';
 import { HttpHandlerContext } from '../../models/http-handler-context';
 import { HttpHandlerRequest } from '../../models/http-handler-request';
 import { HttpMethods } from '../../models/http-method';
+import { statusCodes } from '../../handlers/error.handler';
 import { NodeHttpStreamsHandler } from './node-http-streams.handler';
 import { NodeHttpStreams } from './node-http-streams.model';
 
@@ -37,9 +39,33 @@ export class NodeHttpRequestResponseHandler implements NodeHttpStreamsHandler {
     // case 'application/':
     //   return JSON.parse(`{"${decodeURIComponent(body).replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g, '":"')}"}`);
 
+    this.logger.info('Parsing request body', { body, contentType });
+
     if (contentType?.startsWith('application/json')) {
 
-      return JSON.parse(body);
+      try {
+
+        return JSON.parse(body);
+
+      } catch(error: any) {
+
+        throw new BadRequestHttpError(error.message);
+
+      }
+
+    }
+
+    return body;
+
+  }
+
+  private parseResponseBody(body: string, contentType?: string) {
+
+    this.logger.info('Parsing response body', { body, contentType });
+
+    if (contentType?.startsWith('application/json')) {
+
+      return typeof body === 'string' ? body : JSON.stringify(body);
 
     } else {
 
@@ -142,9 +168,12 @@ export class NodeHttpRequestResponseHandler implements NodeHttpStreamsHandler {
       }),
       catchError((error) => {
 
-        this.logger.debug('Internal server error: ', error);
+        const status = error?.statusCode ?? error.status;
+        const message = error?.message ?? error.body;
 
-        return of({ headers: {}, ...error, body: 'Internal Server Error', status: 500 });
+        this.logger.debug(`${error.name}:`, error);
+
+        return of({ headers: {}, ... error, body: message ?? 'Internal Server Error', status: statusCodes[status] ? status : 500 });
 
       }),
       switchMap((response) => {
@@ -201,7 +230,10 @@ export class NodeHttpRequestResponseHandler implements NodeHttpStreamsHandler {
 
         if (response.body !== undefined && response.body !== null) {
 
-          nodeHttpStreams.responseStream.write(response.body);
+          const contentTypeHeader = response.headers['content-type'] || response.headers['Content-Type'];
+
+          const body = this.parseResponseBody(response.body, contentTypeHeader);
+          nodeHttpStreams.responseStream.write(body);
 
         }
 
